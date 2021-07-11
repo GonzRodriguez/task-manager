@@ -1,58 +1,66 @@
 <template>
   <v-app id="app">
-    <v-navigation-drawer v-model="drawer" app clipped>
-      <v-list dense v-for="route in routes" :key="route.title">
-        <v-list-item link @click="navigateTo(route.path)">
-          <v-list-item-action>
-            <v-icon>{{route.icon}}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>{{route.title}}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-app-bar app clipped-left>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title link @click="navigateTo(notes)" class="row-pointer">Task Manager</v-toolbar-title>
-      <v-icon aria-label="dark mode" role="img" aria-hidden="false" :style="{color: darkModeIcon.color}" @click="toggleDarkMode"> {{darkModeIcon.icon}} </v-icon>
-    </v-app-bar>
+    <NavBar :routes="routes" :darkMode="darkMode" @change-dark-mode="cachedDarkMode" :user="user"></NavBar>
     <v-main>
-      <v-container class="fill-height" fluid>
+      <v-container class="fill-height" v-if="signedIn" >
         <v-row align="center" justify="center">
           <v-col>
             <router-view :key="$route.fullPath"></router-view>
           </v-col>
         </v-row>
       </v-container>
+      <v-container class="fill-height" v-else >
+        <sing-up-dialog :dialog="dialog" @sign-up="signUp"></sing-up-dialog>
+      </v-container>
     </v-main>
-    <v-footer app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+    <v-footer class="d-flex flex-row-reverse" app>
+      <span >&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
-<style lang="css" scoped>
-.row-pointer:hover {
-  cursor: pointer;
-}
-</style>
+
 <script>
+import NavBar from './components/NavBar.vue'
+import SingUpDialog from './components/SingUpDialog.vue'
+import { supabase } from './supabase'
+import {mapState} from 'vuex'
+
 export default {
+
+  components: { NavBar, SingUpDialog },
   name: "App",
   data: () => ({
-    drawer: null,
+    dialog: false,
     routes: [
-      { path: "notes", title: "Notes", icon: "mdi-view-dashboard" },
-      { path: "lists", title: "Lists", icon: "mdi-cog" }
+      { path: "tasks", title: "Tasks", icon: "mdi-view-dashboard" },
+      { path: "notebooks", title: "Notebooks", icon: "mdi-notebook-edit-outline" },
+      { path: "notes", title: "Notes", icon: "mdi-note-multiple-outline" },
+
     ],
     darkMode: true,
-    darkModeIcon: {icon: "mdi-theme-light-dark", color: "white"}
-    
+    // user: null,
+    signedIn: false
   }),
-  computed: {
-    cachedDarkMode(){
-     return !this.darkMode;
-    }
+  created(){
+    
+    supabase.auth.onAuthStateChange((event) => {
+      event === "SIGNED_IN" ? this.signedIn = true : this.signedIn = false;
+      event === "SIGNED_IN" ? this.dialog = false : this.dialog = true;
+    })
+      this.$store.state.user;
+      this.$store.dispatch("getUser")
+      this.$store.dispatch("getTasks")
+      this.$store.dispatch("getNotes")
+  },
+  mounted(){
+
+  },
+  
+  computed: mapState(["user"]),
+  watch: {
+    darkMode(newVal){
+    this.$vuetify.theme.dark = newVal;
+  }
   },
   methods: {
     navigateTo(route) {
@@ -67,11 +75,36 @@ export default {
           console.log(error)
         });
     },
-    toggleDarkMode(){
-      this.darkMode = this.cachedDarkMode;
-      this.$vuetify.theme.dark = this.darkMode;
-      this.darkModeIcon.color === "white" ? this.darkModeIcon.color = "grey" : this.darkModeIcon.color = "white";
+    signUp(){
+      const { user, error } = supabase.auth.signIn({
+        provider: 'github'
+      }).catch(err => console.log(error, err))
+      user?.aud ? this.signedIn = true : this.signedIn = false
+    },
+    cachedDarkMode(){
+     this.darkMode = !this.darkMode;
     }
 },
 }
 </script>
+
+<style lang="css" >
+.row-pointer:hover {
+  cursor: pointer;
+}
+* {
+  scrollbar-width: thin;
+}
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgb(63, 63, 63);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(31, 31, 31);
+  border-radius: 20px;
+}
+</style>

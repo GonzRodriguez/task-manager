@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Home from './views/Home.vue'
-
 
 Vue.use(Router)
 
@@ -12,16 +10,26 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: () => import(/* webpackChunkName: "home" */ './views/Home.vue')
+      component: () => import('./views/Home.vue')
     },
     {
+      path: '/tasks',
+      name: 'tasks',
+      component: () => import('./views/Tasks.vue')
+    },
+     {
       path: '/notes',
       name: 'notes',
-      component: () => import(/* webpackChunkName: "table" */ './views/Notes.vue')
+      component: () => import('./views/Notes.vue')
     },
     {
-      path: '/note/:id',
-      component: () => import(/* webpackChunkName: "table" */ './views/Note.vue')
-    }
+      path: '/notes/:id',
+      component: () => import('./views/Note.vue')
+    },
+    {
+      path: '/notebooks',
+      name: 'notebooks',
+      component: () => import('./views/Notebooks.vue')
+    },
   ]
 })
