@@ -59,13 +59,13 @@ export default {
   props: {
     routes: Array,
     darkMode: Boolean,
-    user: Object
+    // user: Object
   },
   data: () => ({
     drawer: null,
     darkModeIcon: {icon: "mdi-theme-light-dark", color: "white"},
   }),
-  computed: mapState(['tasks']),
+  computed: mapState(["tasks", "user"]),
   methods: {
     navigateTo(route) {
       if (this.$route.name !== route) {
@@ -85,11 +85,12 @@ export default {
       data && console.log(data);
     },
     async goToNewNote(){
+      console.log(this.$store.state.user.id);
       const newId = uuidv4();
       const { data, error } = await supabase
         .from('notes')
         .insert([
-          { id: newId, user_id: this.user.id, },
+          { id: newId, user_id: this.$store.state.user.id, },
       ])
       error && console.log(error);
       data && console.log(data);

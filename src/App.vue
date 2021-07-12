@@ -10,7 +10,7 @@
         </v-row>
       </v-container>
       <v-container class="fill-height" v-else >
-        <sing-up-dialog :dialog="dialog" @sign-up="signUp"></sing-up-dialog>
+        <sing-up-dialog :dialog="dialog" @sign-up-github="signUpGithub" @sign-up="signUp"></sing-up-dialog>
       </v-container>
     </v-main>
     <v-footer class="d-flex flex-row-reverse" app>
@@ -75,9 +75,15 @@ export default {
           console.log(error)
         });
     },
-    signUp(){
+    signUpGithub(){
       const { user, error } = supabase.auth.signIn({
         provider: 'github'
+      }).catch(err => console.log(error, err))
+      user?.aud ? this.signedIn = true : this.signedIn = false
+    },
+    signUp(credentials){
+      const { user, error } = supabase.auth.signUp({
+        credentials
       }).catch(err => console.log(error, err))
       user?.aud ? this.signedIn = true : this.signedIn = false
     },
