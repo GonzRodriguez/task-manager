@@ -58,9 +58,7 @@ export default {
       journal: "",
       qa: "",
       thoughts: "",
-      musts:[
-        "", "", "", "", "", "" 
-      ]
+      musts: new Array(6)
       },
       tasks: {
         urgent: [],

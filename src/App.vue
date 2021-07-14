@@ -1,17 +1,16 @@
 <template>
   <v-app id="app">
-    <NavBar :routes="routes" :darkMode="darkMode" @change-dark-mode="cachedDarkMode" :user="user"></NavBar>
+    <NavBar :loading="loading" :isAuthenticated="isAuthenticated" :routes="routes" :darkMode="darkMode" @change-dark-mode="handleDarkMode"></NavBar>
     <v-main>
-      <v-container class="fill-height" v-if="signedIn" >
+      <v-alert :color="alert.color" text :type="alert.type" v-if="alert.isActive" >{{alert.message}}</v-alert>
+      <v-container class="fill-height" v-if="!loading" >
         <v-row align="center" justify="center">
           <v-col>
             <router-view :key="$route.fullPath"></router-view>
           </v-col>
         </v-row>
       </v-container>
-      <v-container class="fill-height" v-else >
-        <sing-up-dialog :dialog="dialog" @sign-up-github="signUpGithub" @sign-up="signUp"></sing-up-dialog>
-      </v-container>
+      <v-progress-linear indeterminate color="teal accent-3" v-else ></v-progress-linear>
     </v-main>
     <v-footer class="d-flex flex-row-reverse" app>
       <span >&copy; {{ new Date().getFullYear() }}</span>
@@ -21,16 +20,14 @@
 
 <script>
 import NavBar from './components/NavBar.vue'
-import SingUpDialog from './components/SingUpDialog.vue'
 import { supabase } from './supabase'
 import {mapState} from 'vuex'
 
 export default {
 
-  components: { NavBar, SingUpDialog },
+  components: { NavBar },
   name: "App",
   data: () => ({
-    dialog: false,
     routes: [
       { path: "tasks", title: "Tasks", icon: "mdi-view-dashboard" },
       { path: "notebooks", title: "Notebooks", icon: "mdi-notebook-edit-outline" },
@@ -38,25 +35,26 @@ export default {
 
     ],
     darkMode: true,
-    // user: null,
-    signedIn: false
+    loading: false,
   }),
-  created(){
-    
-    supabase.auth.onAuthStateChange((event) => {
-      event === "SIGNED_IN" ? this.signedIn = true : this.signedIn = false;
-      event === "SIGNED_IN" ? this.dialog = false : this.dialog = true;
-    })
-      this.$store.state.user;
-      this.$store.dispatch("getUser")
-      this.$store.dispatch("getTasks")
-      this.$store.dispatch("getNotes")
-  },
-  mounted(){
+  computed: {
+    isAuthenticated: function(){ return this.$store.getters.isAuthenticated},
+    StateUser : function(){ return this.$store.getters.StateUser},
+    ...mapState([ "alert", "user"])
+    },
 
+  created(){
+    },
+  updated(){
+    // console.log(supabase.auth.user());
+    this.$store.dispatch("getTasks", this.user?.id)
+    this.$store.dispatch("getNotes", this.user?.id)
+    this.$store.dispatch("getNotebooks", this.user?.id)
   },
+    mounted(){
+    this.$store.commit("setUser", supabase.auth.user())
+    },
   
-  computed: mapState(["user"]),
   watch: {
     darkMode(newVal){
     this.$vuetify.theme.dark = newVal;
@@ -71,25 +69,15 @@ export default {
       }
     },
     goHome(){
-          this.$router.push({ name: "notes" }).catch((error) => {
+          this.$router.push({ name: "home" }).catch((error) => {
           console.log(error)
         });
     },
-    signUpGithub(){
-      const { user, error } = supabase.auth.signIn({
-        provider: 'github'
-      }).catch(err => console.log(error, err))
-      user?.aud ? this.signedIn = true : this.signedIn = false
-    },
-    signUp(credentials){
-      const { user, error } = supabase.auth.signUp({
-        credentials
-      }).catch(err => console.log(error, err))
-      user?.aud ? this.signedIn = true : this.signedIn = false
-    },
-    cachedDarkMode(){
+    handleDarkMode(){
+    // TODO
      this.darkMode = !this.darkMode;
-    }
+    },
+
 },
 }
 </script>

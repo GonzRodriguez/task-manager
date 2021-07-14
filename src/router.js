@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { store } from './store'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -31,5 +32,17 @@ export default new Router({
       name: 'notebooks',
       component: () => import('./views/Notebooks.vue')
     },
+    {
+      path: '/signin',
+      name: 'signin',
+      component: () => import('./views/SignIn.vue')
+    }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+    if (to.name !== 'signin' && !store.getters.isAuthenticated) next({ name: 'signin' })
+    else next()
+})
+
+export default router
