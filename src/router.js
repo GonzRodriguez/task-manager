@@ -38,7 +38,7 @@ const router = new Router({
       component: () => import('./views/SignIn.vue')
     },
     {
-      path: '/*',
+      path: '*',
       name: '404',
       component: () => import('./views/404.vue')
     }
