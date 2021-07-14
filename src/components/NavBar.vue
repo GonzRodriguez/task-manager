@@ -1,6 +1,7 @@
+
 <template>
   <div id="navbar">
-    <v-navigation-drawer v-model="drawer" app clipped class="d-flex justify-space-between">
+    <v-navigation-drawer v-if="!isAuthenticated" v-model="drawer" app clipped class="d-flex justify-space-between">
         <v-list dense v-for="route in routes" :key="route.title">
           <v-list-item link @click="navigateTo(route.path)">
             <v-list-item-action>
@@ -53,7 +54,6 @@
 import { supabase } from '../supabase'
 import { v4 as uuidv4 } from 'uuid';
 import {mapState} from 'vuex'
-
 export default {
   name: "navbar",
   props: {
@@ -65,7 +65,7 @@ export default {
     drawer: null,
     darkModeIcon: {icon: "mdi-theme-light-dark", color: "white"},
   }),
-  computed: mapState(["tasks", "user"]),
+  computed: mapState(["tasks", "user", "isAuthenticated"]),
   methods: {
     navigateTo(route) {
       if (this.$route.name !== route) {
@@ -99,3 +99,16 @@ export default {
   }
 }
 </script>
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Loading complete
