@@ -14,18 +14,24 @@
           </v-card-text>
             <ul>
               <v-card-text>
-                <li v-for="(task, index) in tasks[tab.list]" :key="index">
+                <li v-for="(input, index) in inputs[tab.list]" :key="index">
                   <div class="d-flex d-column">
-                    <input 
-                    type="text " 
-                    v-model="task.value"
-                    class="task-input" 
-                    @keyup="$emit('update-task', {list: tab.list, value: task.value, id: task.id, urgency: tab.urgency})"
-                    @keyup.enter="$emit('add-task', {list: tab.list, urgency: tab.urgency})"/>
+                    <v-textarea 
+                    type="text" 
+                    v-model="input.value"
+                    rows="1"
+                    solo
+                    auto-grow
+                    dense
+                    flat
+                    color="grey darken-1"
+                    @keyup="$emit('update-task', {list: tab.list, value: input.value, id: input.id, urgency: tab.urgency})"
+                    @keyup.enter="$emit('add-task', {list: tab.list, urgency: tab.urgency})"
+                    />
                     <v-btn
                     id="closeButton"
                     icon 
-                    @click="$emit('delete-task', {id: task.id, list: tab.list})"
+                    @click="$emit('delete-task', {value: input.value, list: tab.list, urgency: tab.urgency})"
                     ><v-icon dark small>mdi-close</v-icon></v-btn>
                   </div>
                   </li>
@@ -41,7 +47,7 @@
 export default {
   name: "tasksCards",
   props: {
-    tasks: Object  
+    inputs: Object  
   },
   data: () => ({
     tabs: [
@@ -70,10 +76,10 @@ export default {
   #delete {
   border: solid rgb(57, 204, 148) ;
   }
-  .task-input{
+  /* .task-input{
     width: 100% ;
     border: 0 none white;
     color: white;
     outline: none;
-  }
+  } */
 </style>

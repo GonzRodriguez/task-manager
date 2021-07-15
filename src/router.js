@@ -46,7 +46,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.name !== 'signin' && !store.getters.isAuthenticated) next({ name: 'signin' })
+    if (to.name !== 'signin' && from.name !== "signin" && !store.getters.isAuthenticated) next({ name: 'signin' })
     else next()
 })
 

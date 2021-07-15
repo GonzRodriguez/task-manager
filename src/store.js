@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
   state: {
     user: supabase.auth.user(),
     alert: {message: "", type: "info", color: "blue", isActive: false},
+    loading: false,
     tasks: [],
     notes: [],
     notebooks: [],
@@ -24,8 +25,7 @@ export const store = new Vuex.Store({
     },
     setNotebooks(state, data){  
       const [...notebooks] = data
-      state.tasks = notebooks
-      console.log(state.notebooks)
+      state.notebooks = notebooks
     },
     setNotes(state, data){
       const [...notes] = data
@@ -40,7 +40,10 @@ export const store = new Vuex.Store({
       }
       setTimeout(() => {
         state.alert.isActive = false
-      }, 3000)
+      }, 3200)
+    },
+    loading(state){
+      state.loading = !state.loading
     }
   },
   getters: {
@@ -49,25 +52,43 @@ export const store = new Vuex.Store({
   },
   actions: {
     async getTasks(context, id){
-      let { data } = await supabase
+      let { data, error } = await supabase
         .from('tasks')
         .select("*")
         .eq("user_id", id)
-      context.commit("setTasks", data)
+      error && console.log(error);
+      error && context.commit("setAlert", {message: error.message, color: "red"})
+      data && context.commit("setTasks", data)
     },
     async getNotes(context, id) {
-      let { data } = await supabase
+      let { data, error } = await supabase
         .from('notes')
         .select("*")
         .eq("user_id", id)
-      context.commit("setNotes", data)
+      error && console.log(error);
+      error && context.commit("setAlert", {message: error.message, color: "red"})
+      data && context.commit("setNotes", data)
     },
     async getNotebooks(context, id) {
-      let { data } = await supabase
-        .from('notebooks')
-        .select("*")
+      let { data, error } = await supabase
+        .from('notes')
+        .select("notebook")
         .eq("user_id", id)
-      context.commit("setNotebooks", data)
+      data && context.commit("setNotebooks", data)
+      error && console.log(error);
+      error && context.commit("setAlert", {message: error.message, color: "red"})
+
+    },
+    async createNewNote(context, note){
+      const { data, error } = await supabase
+        .from('notes')
+        .insert([
+          { id: note.id, user_id: this.state.user?.id, title: note.title, notebook: note.notebook},
+      ])
+      error && context.commit("setAlert", {message: error.message, color: "red"})
+      data && context.commit("setAlert", {message: `New note ${data.title || ""} has been created`, color: "green", type: "success"})
+
+      console.log(data,error);
     },
     async signUp(context, credentials) {
       const { user, error } = await supabase.auth.signUp({
@@ -76,17 +97,14 @@ export const store = new Vuex.Store({
       })
       if (error) context.commit("setAlert", { message: error.message })
       context.commit("setUser", user)
-      console.log(user);
     },
     async logIn(context, credentials) {
-      console.log(credentials);
       const { user, error } = await supabase.auth.signIn({
         email: credentials.email,
         password: credentials.password
       })
-      if (error) context.commit("setAlert", { message: error.message })
+      if (error) return context.commit("setAlert", { message: error.message })
       context.commit("setUser", user)
-      console.log(user);
     }
   },
 

@@ -19,7 +19,6 @@ import { mapState, } from 'vuex'
 export default {
   name: "tasks",
   data: () => ({
-    cards: [],
   }),
   computed: mapState(["tasks"]),
   

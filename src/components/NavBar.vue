@@ -1,8 +1,9 @@
-
 <template>
   <div id="navbar">
-    <v-navigation-drawer v-if="!isAuthenticated" v-model="drawer" app clipped class="d-flex justify-space-between">
-        <v-list dense v-for="route in routes" :key="route.title">
+    <v-navigation-drawer v-model="drawer" app clipped class="d-flex justify-space-between" >
+      <NewNoteDialog :dialog="dialog" @handle-note-dialog="handleNewNoteDialog"></NewNoteDialog>
+      <!-- TODO basicly all the views for every route -->
+        <!-- <v-list dense v-for="route in routes" :key="route.title">
           <v-list-item link @click="navigateTo(route.path)">
             <v-list-item-action>
               <v-icon>{{route.icon}}</v-icon>
@@ -11,24 +12,22 @@
               <v-list-item-title>{{route.title}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-        </v-list>
-        <div class="mx-4">
+        </v-list> -->
+        <div class="ma-6">
         <v-btn
         rounded
         elevation="10"        
         block
         color="teal accent-3"
-        @click="goToNewNote"
+        @click="handleNewNoteDialog"
         >
         New Note</v-btn>
         </div>
-        <v-card class="ma-2" elevation="12"> 
+        <v-card class="ma-2 pb-4" elevation="12"> 
         <v-card-text class="pb-0">TO-DO'S</v-card-text>
-          <div class="pb-2 " v-for="(list, index) in tasks" :key="index">
-            <div class="d-flex flex-row ma-0 pb-0 " v-for="task in list" :key="task.value">
+          <div class="pb-2 " v-for="(task, index) in tasks" :key="index">
             <v-card-text class="ma-0 py-0 px-3">{{task.value}}</v-card-text>
             </div>
-          </div>
         </v-card>
         <template v-slot:append>
         <div class="mb-6">
@@ -42,9 +41,10 @@
         </template>
     </v-navigation-drawer>
     <v-app-bar app clipped-left >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title link @click="navigateTo(notes)" class="row-pointer">Task Manager</v-toolbar-title>
+      <v-app-bar-nav-icon v-if="isAuthenticated" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title link @click="goHome()" class="row-pointer">Task Manager</v-toolbar-title>
       <v-spacer></v-spacer>
+      <!-- TODO some colors aren't set up in light mode -->
       <!-- <v-icon aria-label="dark mode" role="img" aria-hidden="false" class="mx-6" :style="{color: darkModeIcon.color}" @click="toggleDarkMode"> {{darkModeIcon.icon}} </v-icon> -->
     </v-app-bar>
   </div>
@@ -52,63 +52,50 @@
 
 <script>
 import { supabase } from '../supabase'
-import { v4 as uuidv4 } from 'uuid';
 import {mapState} from 'vuex'
+import NewNoteDialog from "./NewNoteDialog.vue"
 export default {
   name: "navbar",
+  components: { NewNoteDialog },
   props: {
     routes: Array,
     darkMode: Boolean,
-    // user: Object
+    isAuthenticated: Boolean,
   },
   data: () => ({
-    drawer: null,
+    drawer: false,
     darkModeIcon: {icon: "mdi-theme-light-dark", color: "white"},
+    dialog: false
   }),
-  computed: mapState(["tasks", "user", "isAuthenticated"]),
+  computed: mapState(["tasks", "user" ]),
+
+  updated(){
+    this.drawer = this.isAuthenticated;
+    this.$store.dispatch("getTasks", this.user.id)
+  },
+
   methods: {
-    navigateTo(route) {
-      if (this.$route.name !== route) {
-        this.$router.push({ name: route }).catch((error) => {
-          console.log(error);
-        })
-      }
-    },
     toggleDarkMode(){
       this.darkModeIcon.color === "white" ? this.darkModeIcon.color = "grey" : this.darkModeIcon.color = "white";
       this.$emit("change-dark-mode")
     },
-    logout() {
-      const { data, error } = supabase.auth.signOut()
-      this.drawer = null
-      error && console.log(error);
-      data && console.log(data);
+    async logout() {
+      const { error } = await supabase.auth.signOut()
+      this.$store.commit("setUser")
+      error && this.$store.dispatch("alert", error.message)
+      !error && this.$router.push(`/signin`);
     },
-    async goToNewNote(){
-      console.log(this.$store.state.user.id);
-      const newId = uuidv4();
-      const { data, error } = await supabase
-        .from('notes')
-        .insert([
-          { id: newId, user_id: this.$store.state.user.id, },
-      ])
-      error && console.log(error);
-      data && console.log(data);
-      return this.$router.push(`/notes/${newId}`)
-    }
+    handleNewNoteDialog(){
+      this.dialog = !this.dialog;
+      this.$store.dispatch("getNotebooks", this.user?.id)
+    },
+    goHome(){
+          this.$router.push({ name: "home" }).catch((error) => {
+          console.log(error)
+      });
+    },
+
+
   }
 }
 </script>
-© 2021 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-Loading complete

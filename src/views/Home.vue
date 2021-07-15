@@ -1,40 +1,61 @@
 <template>
   <v-container fluid>
+  <div v-if="!notes"  full-width class="d-flex flex-column" >
+  <div class="text-h2 text-center display-4" v-text="'No notes yet'"></div> 
+    <v-img
+        lazy-src="https://i.imgur.com/U3vTGjX.png"
+        max-height="400"
+        max-width="400"
+        src="https://i.imgur.com/U3vTGjX.png"
+        class="mx-auto"
+      ></v-img>
+  </div>
+  <div v-else >
     <v-row dense>
-      <v-col v-for="card in cards" :key="card.title" :cols="card.flex">
-        <v-hover v-slot:default="{ hover }">
-          <v-card :elevation="hover ? 16 : 2" :style="hover? 'cursor: pointer': '' ">
-            <v-card-text @click="navigateTo(card.title.toLowerCase())">
-              <h2 style="color:black" class="text-center">{{card.title}}</h2>
-              <h2
-                style="color:black; margin-top:20px; height: 50px"
-                class="text-center"
-              >{{card.quantity}}</h2>
-            </v-card-text>
-          </v-card>
-        </v-hover>
-      </v-col>
-    </v-row>
+      <v-col
+        v-for="note in notes"
+        :key="note.id"
+        :cols="4"
+      >
+      <v-card
+      min-height="300"
+      @click="goToNote(note)"
+      >
+        <v-card-title v-text="note.title"></v-card-title>
+        <v-card-text>
+          <v-row
+            align="center"
+            class="mx-0"
+          >
+          <div class="grey--text ms-4">
+            {{note.journal}}
+          </div>
+        </v-row>
+        </v-card-text>
+      </v-card>
+        </v-col>
+      </v-row>
+  </div>
   </v-container>
 </template>
 
 <script>
+import { mapState, } from 'vuex'
 
 export default {
   name: "Home",
   data: () => ({
-    cards: [],
   }),
-  created() {
+  computed: {
+    ...mapState(["notes", "user"]),
+    },
+      created() {
   },
   methods: {
-      navigateTo(route) {
-      if (this.$route.name !== route) {
-        this.$router.push({ name: route }).catch((error) => {
-          console.log(error);
-        })
-      }
-    },
+    goToNote(note){
+      console.log(note);
+      this.$router.push(`/notes/${note.id}`)
+    }
   }
 }
 </script>

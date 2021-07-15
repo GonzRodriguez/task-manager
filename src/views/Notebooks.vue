@@ -31,7 +31,6 @@ import { mapState, } from 'vuex'
 export default {
   name: "notebooks",
   data: () => ({
-    cards: [],
   }),
   created() {
     console.log(this.$store);
@@ -39,6 +38,9 @@ export default {
   computed: mapState(["notebooks"]),
 
   methods: {
+    createNotebook(){
+
+    }
   }
 }
 </script>

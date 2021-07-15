@@ -1,8 +1,8 @@
 <template>
   <v-app id="app">
-    <NavBar :loading="loading" :isAuthenticated="isAuthenticated" :routes="routes" :darkMode="darkMode" @change-dark-mode="handleDarkMode"></NavBar>
+    <NavBar :isAuthenticated="isAuthenticated" :routes="routes" :darkMode="darkMode" @change-dark-mode="handleDarkMode"></NavBar>
     <v-main>
-      <v-alert :color="alert.color" text :type="alert.type" v-if="alert.isActive" >{{alert.message}}</v-alert>
+      <v-alert :color="alert.color" text :type="alert.type" v-if="alert.isActive" width="600" id="alert">{{alert.message}}</v-alert>
       <v-container class="fill-height" v-if="!loading" >
         <v-row align="center" justify="center">
           <v-col>
@@ -35,26 +35,23 @@ export default {
 
     ],
     darkMode: true,
-    loading: false,
   }),
   computed: {
     isAuthenticated: function(){ return this.$store.getters.isAuthenticated},
     StateUser : function(){ return this.$store.getters.StateUser},
-    ...mapState([ "alert", "user"])
+    ...mapState([ "alert", "user", "loading"])
     },
 
-  created(){
-    },
   updated(){
-    // console.log(supabase.auth.user());
-    this.$store.dispatch("getTasks", this.user?.id)
-    this.$store.dispatch("getNotes", this.user?.id)
-    this.$store.dispatch("getNotebooks", this.user?.id)
+    this.user?.id && this.$store.dispatch("getTasks", this.user?.id)
+    this.user?.id && this.$store.dispatch("getNotes", this.user?.id)
+    this.user?.id && this.$store.dispatch("getNotebooks", this.user?.id)
+    this.$store.commit("setUser" )
+    
   },
     mounted(){
     this.$store.commit("setUser", supabase.auth.user())
     },
-  
   watch: {
     darkMode(newVal){
     this.$vuetify.theme.dark = newVal;
@@ -67,11 +64,6 @@ export default {
           console.log(error)
         });
       }
-    },
-    goHome(){
-          this.$router.push({ name: "home" }).catch((error) => {
-          console.log(error)
-        });
     },
     handleDarkMode(){
     // TODO
@@ -100,5 +92,11 @@ export default {
 *::-webkit-scrollbar-thumb {
   background-color: rgb(31, 31, 31);
   border-radius: 20px;
+}
+#alert {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000
 }
 </style>

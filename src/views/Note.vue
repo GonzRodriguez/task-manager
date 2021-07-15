@@ -8,32 +8,32 @@
       <v-col  >
       <v-card class="journal">
       <v-card-subtitle class="text-lg-h6 mb-0 pb-0">Journal</v-card-subtitle>
-      <textarea name="Text1" cols="40" class="journal-textarea" rows="8" v-model="value.journal" @keyup="handleUpload"></textarea>
+      <textarea name="Text1" cols="40" class="journal-textarea" rows="8" v-model="value.journal" @keyup="autoUpload({journal: value.journal})"></textarea>
       </v-card>
       </v-col>
     </v-row>
     <div class="moveUpwardsAddShadow dark">
-   <TasksCard :tasks="tasks" @add-task="addTask" @update-task="updateTask" @delete-task="deleteTask"></TasksCard>
+   <TasksCard :inputs="inputs" @add-task="addTask" @update-task="updateTask" @delete-task="deleteTask"></TasksCard>
     <v-row>
       <v-col lg="6" md="6" sm="12" fluid>
       <v-card>
         <v-card-subtitle class="text-lg-h6 mb-0 pb-0">Q&A</v-card-subtitle>
-        <textarea name="Text1" cols="40" class="journal-textarea" rows="4" @keyup="handleUpload"></textarea>
+        <textarea name="Text1" cols="40" class="journal-textarea" rows="4" v-model="value.qa" @keyup="autoUpload({qa: value.qa})"></textarea>
       </v-card>
       </v-col>
       <v-col lg="6" md="6" sm="12">
       <v-card>
         <v-card-subtitle class="text-lg-h6 mb-0 pb-0">Final Thoughts</v-card-subtitle>
-        <textarea name="Text1" cols="40" class="journal-textarea" rows="4" @keyup="handleUpload"></textarea>
+        <textarea name="Text1" cols="40" class="journal-textarea" rows="4" v-model="value.thoughts" @keyup="autoUpload({thoughts:value.thoughts})"></textarea>
       </v-card>
       </v-col>
       <v-col sm="12">
       <v-card>
-        <v-card-subtitle class="text-lg-h6 mb-0 pb-0">6 Musts for Tomorrow</v-card-subtitle>
+        <v-card-subtitle class="text-lg-h6 mb-0 pb-0">6 TODO'S for Tomorrow</v-card-subtitle>
         <v-card-text>
         <ul>
           <div v-for="(must, index) in value.musts" :key="index">
-            <li> <input type="text" v-model="value.musts[index]" class="musts-input" @keyup="handleUpload"/></li>
+            <li> <input type="text" v-model="value.musts[index]" class="musts-input" @keyup="autoUpload({musts: value.musts})"/></li>
           </div>
         </ul>
         </v-card-text>
@@ -48,63 +48,52 @@
 <script>
 import { supabase } from '../supabase'
 import TasksCard from '../components/TasksCards.vue'
+import { mapState, } from 'vuex'
 
 export default {
   components: { TasksCard },
   name: "notes",
   data: () => ({
-    user: null,
     value: {
       journal: "",
       qa: "",
       thoughts: "",
-      musts: new Array(6)
+      musts: Array(6),
       },
-      tasks: {
+      saving: "Saved",
+      inputs:{
         urgent: [],
         important: [],
         delegate: [],
-        delete: [],
-      },
-      saving: "Saved"
+        delete: []
+      }
   }),
-  async beforeCreate(){
-      let { data, error } = await supabase
-       .from('tasks')
-       .select("*")
-       .eq("note_id", this.$route.params.id)
-       const [...tasks] = data
-       tasks.map(task => {
-         this.tasks[task.action].push(task)
-       })
-      console.log(error, data);
+    computed: {
+    ...mapState(["notes", "user", "tasks"]),
+    },
+  created(){
+    this.tasks.forEach(task => {
+      this.inputs[task.action].push(task)
+    })
   },
-  async created(){
-      this.user = this.$store.state.user;
-     let { data, error } = await supabase
-       .from('notes')
-       .select("*")
-       .eq("id", this.$route.params.id)
-       console.log(error);
-       const {...note} = data[0]
-      this.value.journal = note.journal
-      this.value.qa = note.qa
-      this.value.thoughts = note.thoughts
-      this.value.musts = note.musts
+  updated(){
+    this.$store.dispatch("getTasks", this.user.id)
   },
   methods: {
-     handleUpload(){
+     autoUpload(toUpdate){
       this.saving = "Saving..."
       let timer;
       const waitTime = 3000;
+      console.log(toUpdate);
       clearTimeout(timer);
       timer = setTimeout(async () => {
         let { data, error } = await supabase
           .from('notes')
-          .update({ journal: this.value.journal, qa: this.value.qa, thoughts: this.value.thoughts, musts: this.value.musts})
+          .update(toUpdate)
           .match({id: this.$route.params.id})
           if (data) this.saving = "Saved" 
           if (error) this.saving = "Something went wrong, your note isn't saved"
+          console.log(data);
         }, waitTime);
     },
     async addTask(params){
@@ -113,7 +102,8 @@ export default {
       .from('tasks')
       .insert({user_id: this.user.id, value: "", note_id: this.$route.params.id, action: list, urgency: urgency})
       console.log(error, data);
-      this.tasks[list].push({value: "", id: data[0].id});
+      if (error) this.saving = "Something went wrong, your note isn't saved"
+      this.inputs[list].push({value: "", id: data[0].id});
     },
     updateTask(params){
       const {list, id, value} = params
@@ -132,13 +122,13 @@ export default {
       }, waitTime);
     },
     async deleteTask(params){
-      const {list, id} = params
+      const {value, list, urgency} = params
     const { data, error } = await supabase
       .from('tasks')
       .delete()
-      .match({id: id})
+      .match({note_id: this.$route.params.id, value: value, urgency: urgency })
       console.log(error, data);
-      this.tasks[list] = this.tasks[list].filter(t => t.id !== id)
+      this.inputs[list] = this.inputs[list].filter(t => t.value !== value)
       return
     }
   }
