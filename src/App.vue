@@ -2,7 +2,7 @@
   <v-app id="app">
     <NavBar :isAuthenticated="isAuthenticated" :routes="routes" :darkMode="darkMode" @change-dark-mode="handleDarkMode"></NavBar>
     <v-main>
-      <v-alert :color="alert.color" text :type="alert.type" v-if="alert.isActive" width="600" id="alert">{{alert.message}}</v-alert>
+      <v-alert :color="alert.color" :type="alert.type" v-if="alert.isActive" width="60%" id="alert">{{alert.message}}</v-alert>
       <v-container class="fill-height" v-if="!loading" >
         <v-row align="center" justify="center">
           <v-col>

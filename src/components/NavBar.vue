@@ -63,14 +63,14 @@ export default {
     isAuthenticated: Boolean,
   },
   data: () => ({
-    drawer: false,
     darkModeIcon: {icon: "mdi-theme-light-dark", color: "white"},
     dialog: false
   }),
-  computed: mapState(["tasks", "user" ]),
-
+  computed: mapState(["tasks", "user", "drawer" ]),
+  created(){
+    // this.drawer = this.isAuthenticated;
+  },
   updated(){
-    this.drawer = this.isAuthenticated;
     this.$store.dispatch("getTasks", this.user.id)
   },
 

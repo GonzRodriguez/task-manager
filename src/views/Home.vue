@@ -15,7 +15,9 @@
       <v-col
         v-for="note in notes"
         :key="note.id"
-        :cols="4"
+        lg="4"
+        md="6" 
+        sm="12"
       >
       <v-card
       min-height="300"
