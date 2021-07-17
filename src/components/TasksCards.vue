@@ -4,11 +4,12 @@
       <v-col 
       v-for="tab in tabs"
       :key="tab.title"
+      cols="12"
       md="6" 
       sm="12"
       >
         <v-card class="tasks" :id="tab.list" >
-          <v-card-title class="mb-0 pb-0">{{tab.title}}</v-card-title>
+          <v-card-title class="mb-0 pb-0 text-subtitle-1 text-md-h6">{{tab.title}}</v-card-title>
           <v-card-text class="text--secondary text-caption font-italic pb-1">
             {{tab.subtitle}}
           </v-card-text>
@@ -17,6 +18,7 @@
                 <li v-for="(input, index) in inputs[tab.list]" :key="index">
                   <div class="d-flex d-column">
                     <v-textarea 
+                    class="text-caption text-md-body-1"
                     type="text" 
                     v-model="input.value"
                     rows="1"
@@ -76,10 +78,5 @@ export default {
   #delete {
   border: solid rgb(57, 204, 148) ;
   }
-  /* .task-input{
-    width: 100% ;
-    border: 0 none white;
-    color: white;
-    outline: none;
-  } */
+
 </style>

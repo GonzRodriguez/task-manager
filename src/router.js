@@ -33,9 +33,9 @@ const router = new Router({
       component: () => import('./views/Notebooks.vue')
     },
     {
-      path: '/signin',
-      name: 'signin',
-      component: () => import('./views/SignIn.vue')
+      path: '/auth',
+      name: 'auth',
+      component: () => import('./views/Auth.vue')
     },
     {
       path: '*',
@@ -46,7 +46,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.name !== 'signin' && from.name !== "signin" && !store.getters.isAuthenticated) next({ name: 'signin' })
+    if (to.name !== "auth" && from.name !== "auth" && !store.getters.isAuthenticated) next({ name: "auth", query: {component: "login"}  })
     else next()
 })
 

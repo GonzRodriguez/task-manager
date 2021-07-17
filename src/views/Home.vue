@@ -15,28 +15,38 @@
       <v-col
         v-for="note in notes"
         :key="note.id"
-        lg="4"
-        md="6" 
+        cols="12"
+        lg="3"
+        md="4"
         sm="12"
       >
       <v-card
-      min-height="300"
+      class="note"
+      outlined
       @click="goToNote(note)"
       >
-        <v-card-title v-text="note.title"></v-card-title>
-        <v-card-text>
-          <v-row
-            align="center"
-            class="mx-0"
-          >
-          <div class="grey--text ms-4">
-            {{note.journal}}
-          </div>
-        </v-row>
-        </v-card-text>
-      </v-card>
+      <v-row dense>
+        <v-col
+          cols="12"
+          sm="12"
+        >
+          <v-card-title v-text="note.title"></v-card-title>
+          <v-card-text>
+            <div class=" text--secondary text-truncate">
+              {{note.journal}}
+            </div>
+          </v-card-text>
+          <v-card-text>
+            <div class="text--disabled">
+              Created at: {{new Date(note.inserted_at)}}
+              {{is24h(note)}}
+            </div>
+          </v-card-text>
         </v-col>
-      </v-row>
+        </v-row>
+      </v-card>
+      </v-col>
+    </v-row>
   </div>
   </v-container>
 </template>
@@ -57,7 +67,21 @@ export default {
     goToNote(note){
       console.log(note);
       this.$router.push(`/notes/${note.id}`)
+    },
+    is24h(note){
+      const d = new Date(note.inserted_at);
+      const newDate = new Date()
+      const noteDate = d.getTime()
+      const is24 = newDate.setTime(newDate.getTime() - (1000 * 60 * 24))
+      if ( noteDate < is24 ) return true
+      return false
     }
   }
 }
 </script>
+<style lang="css" scoped>
+  .note{
+    background-repeat: repeat;
+    background-image: url("https://www.transparenttextures.com/patterns/dark-circles.png");
+  }
+</style>

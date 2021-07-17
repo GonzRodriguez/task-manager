@@ -1,9 +1,15 @@
 <template>
   <div id="navbar">
-    <v-navigation-drawer v-model="drawer" app clipped class="d-flex justify-space-between" >
+    <v-navigation-drawer 
+    v-model="drawer" 
+    app 
+    clipped
+    overlay-color="grey darken-4"
+    mobile-breakpoint="md"
+    >
       <NewNoteDialog :dialog="dialog" @handle-note-dialog="handleNewNoteDialog"></NewNoteDialog>
       <!-- TODO basicly all the views for every route -->
-        <!-- <v-list dense v-for="route in routes" :key="route.title">
+        <v-list dense v-for="route in routes" :key="route.title">
           <v-list-item link @click="navigateTo(route.path)">
             <v-list-item-action>
               <v-icon>{{route.icon}}</v-icon>
@@ -12,7 +18,7 @@
               <v-list-item-title>{{route.title}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-        </v-list> -->
+        </v-list>
         <div class="ma-6">
         <v-btn
         rounded
@@ -23,7 +29,7 @@
         >
         New Note</v-btn>
         </div>
-        <v-card class="ma-2 pb-4" elevation="12"> 
+        <v-card class="ma-2 pb-4" elevation="12" color="blue-grey darken-4"> 
         <v-card-text class="pb-0">TO-DO'S</v-card-text>
           <div class="pb-2 " v-for="(task, index) in tasks" :key="index">
             <v-card-text class="ma-0 py-0 px-3">{{task.value}}</v-card-text>
@@ -43,10 +49,10 @@
     <v-app-bar app clipped-left >
       <v-app-bar-nav-icon v-if="isAuthenticated" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title link @click="goHome()" class="row-pointer">Task Manager</v-toolbar-title>
-      <v-spacer></v-spacer>
+    </v-app-bar>
+      
       <!-- TODO some colors aren't set up in light mode -->
       <!-- <v-icon aria-label="dark mode" role="img" aria-hidden="false" class="mx-6" :style="{color: darkModeIcon.color}" @click="toggleDarkMode"> {{darkModeIcon.icon}} </v-icon> -->
-    </v-app-bar>
   </div>
 </template>
 
@@ -54,6 +60,7 @@
 import { supabase } from '../supabase'
 import {mapState} from 'vuex'
 import NewNoteDialog from "./NewNoteDialog.vue"
+
 export default {
   name: "navbar",
   components: { NewNoteDialog },
@@ -64,14 +71,17 @@ export default {
   },
   data: () => ({
     darkModeIcon: {icon: "mdi-theme-light-dark", color: "white"},
-    dialog: false
+    dialog: false,
+    drawer: true,
+
   }),
-  computed: mapState(["tasks", "user", "drawer" ]),
+  computed: mapState(["tasks", "user"]),
   created(){
-    // this.drawer = this.isAuthenticated;
+  if (!this.user) this.drawer = false 
   },
   updated(){
-    this.$store.dispatch("getTasks", this.user.id)
+    this.$store.dispatch("getTasks", this.user?.id)
+    if (!this.user) this.drawer = false 
   },
 
   methods: {
@@ -81,6 +91,7 @@ export default {
     },
     async logout() {
       const { error } = await supabase.auth.signOut()
+      this.drawer = false
       this.$store.commit("setUser")
       error && this.$store.dispatch("alert", error.message)
       !error && this.$router.push(`/signin`);

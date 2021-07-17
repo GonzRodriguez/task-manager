@@ -4,8 +4,8 @@
     <v-main>
       <v-alert :color="alert.color" :type="alert.type" v-if="alert.isActive" width="60%" id="alert">{{alert.message}}</v-alert>
       <v-container class="fill-height" v-if="!loading" >
-        <v-row align="center" justify="center">
-          <v-col>
+        <v-row align="center" justify="center" class="fill-height" no-gutters> 
+          <v-col >
             <router-view :key="$route.fullPath"></router-view>
           </v-col>
         </v-row>
@@ -35,11 +35,12 @@ export default {
 
     ],
     darkMode: true,
+    sideMenuActive: true
   }),
   computed: {
     isAuthenticated: function(){ return this.$store.getters.isAuthenticated},
     StateUser : function(){ return this.$store.getters.StateUser},
-    ...mapState([ "alert", "user", "loading"])
+    ...mapState([ "alert", "user", "loading", "drawer"])
     },
 
   updated(){

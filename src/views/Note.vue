@@ -4,43 +4,53 @@
     <div class="d-flex justyfy-end mx-2">
       <div class="text-caption text--disabled">{{saving}}</div>
     </div>
+    <v-container fluid class="textureBg grey darken-4 rounded">
     <v-row >
-      <v-col  >
-      <v-card class="journal">
-      <v-card-subtitle class="text-lg-h6 mb-0 pb-0">Journal</v-card-subtitle>
-      <textarea name="Text1" cols="40" class="journal-textarea" rows="8" v-model="value.journal" @keyup="autoUpload({journal: value.journal})"></textarea>
-      </v-card>
+      <v-col >
+        <v-card color="transparent" flat>
+          <v-card-subtitle class="text-md-h6 mb-0 pb-0">Journal</v-card-subtitle>
+          <v-textarea solo flat class="text-caption text-md-body-1" background-color="transparent" auto-grow color="grey" name="Text1" cols="40" rows="8" v-model="value.journal" @keyup="autoUpload({journal: value.journal})"></v-textarea>
+        </v-card>
       </v-col>
     </v-row>
-    <div class="moveUpwardsAddShadow dark">
-   <TasksCard :inputs="inputs" @add-task="addTask" @update-task="updateTask" @delete-task="deleteTask"></TasksCard>
-    <v-row>
-      <v-col lg="6" md="6" sm="12" fluid>
-      <v-card>
-        <v-card-subtitle class="text-lg-h6 mb-0 pb-0">Q&A</v-card-subtitle>
-        <textarea name="Text1" cols="40" class="journal-textarea" rows="4" v-model="value.qa" @keyup="autoUpload({qa: value.qa})"></textarea>
-      </v-card>
-      </v-col>
-      <v-col lg="6" md="6" sm="12">
-      <v-card>
-        <v-card-subtitle class="text-lg-h6 mb-0 pb-0">Final Thoughts</v-card-subtitle>
-        <textarea name="Text1" cols="40" class="journal-textarea" rows="4" v-model="value.thoughts" @keyup="autoUpload({thoughts:value.thoughts})"></textarea>
-      </v-card>
-      </v-col>
-      <v-col sm="12">
-      <v-card>
-        <v-card-subtitle class="text-lg-h6 mb-0 pb-0">6 TODO'S for Tomorrow</v-card-subtitle>
-        <v-card-text>
-        <ul>
-          <div v-for="(must, index) in value.musts" :key="index">
-            <li> <input type="text" v-model="value.musts[index]" class="musts-input" @keyup="autoUpload({musts: value.musts})"/></li>
-          </div>
-        </ul>
-        </v-card-text>
-      </v-card>
-      </v-col>
-    </v-row>
-    </div>
+    <v-sheet
+      elevation="24"
+      outlined
+      dark
+    >
+      <TasksCard :inputs="inputs" @add-task="addTask" @update-task="updateTask" @delete-task="deleteTask"></TasksCard>
+        <v-row>
+          <v-col cols="12"  md="6" sm="12" fluid>
+          <v-card color="grey darken-4" class="lightTexture" flat>
+            <v-card-subtitle class="text-lg-h6 mb-0 pb-0">Q&A</v-card-subtitle>
+            <v-card-text>
+            <v-textarea solo flat class="text-caption text-md-body-1"  background-color="transparent" auto-grow color="grey" name="Text1" cols="40" rows="4" v-model="value.qa" @keyup="autoUpload({qa: value.qa})"></v-textarea>
+            </v-card-text>
+          </v-card>
+          </v-col>
+          <v-col cols="12" md="6" sm="12">
+          <v-card color="transparent" class="lightTexture" flat>
+            <v-card-subtitle class="text-lg-h6 mb-0 pb-0">Final Thoughts</v-card-subtitle>
+            <v-card-text>
+            <v-textarea solo flat class="text-caption text-md-body-1"  background-color="transparent" auto-grow color="grey" name="Text1" cols="40" rows="4" v-model="value.thoughts" @keyup="autoUpload({thoughts:value.thoughts})"></v-textarea>
+            </v-card-text>
+          </v-card>
+          </v-col>
+        </v-row>
+    </v-sheet>
+          <v-col cols="12" sm="12"  >
+          <v-card color="transparent"  flat>
+            <v-card-subtitle class="text-lg-h6 mb-0 pb-0">6 Things to do Tomorrow</v-card-subtitle>
+            <v-card-text>
+            <ul>
+              <div v-for="(must, index) in value.musts" :key="index">
+                <li> <v-text-field type="text" max-height="15px" v-model="value.musts[index]" hide-details solo flat dense class="text-caption text-md-body-1" background-color="transparent" color="grey" @keyup="autoUpload({musts: value.musts})"/></li>
+              </div>
+            </ul>
+            </v-card-text>
+          </v-card>
+          </v-col>
+     </v-container>
      </v-container>
   </div>
 </template>
@@ -84,7 +94,6 @@ export default {
       this.saving = "Saving..."
       let timer;
       const waitTime = 3000;
-      console.log(toUpdate);
       clearTimeout(timer);
       timer = setTimeout(async () => {
         let { data, error } = await supabase
@@ -93,7 +102,6 @@ export default {
           .match({id: this.$route.params.id})
           if (data) this.saving = "Saved" 
           if (error) this.saving = "Something went wrong, your note isn't saved"
-          console.log(data);
         }, waitTime);
     },
     async addTask(params){
@@ -101,7 +109,6 @@ export default {
       const { data, error } = await supabase
       .from('tasks')
       .insert({user_id: this.user.id, value: "", note_id: this.$route.params.id, action: list, urgency: urgency})
-      console.log(error, data);
       if (error) this.saving = "Something went wrong, your note isn't saved"
       this.inputs[list].push({value: "", id: data[0].id});
     },
@@ -116,7 +123,6 @@ export default {
       .from('tasks')
       .update({ value: value,  action: list })
       .eq("id", id)
-      console.log(error, data);
         if (data) this.saving = "Saved" 
         if (error) this.saving = "Something went wrong, your note isn't saved"
       }, waitTime);
@@ -136,35 +142,16 @@ export default {
 </script>
 
 <style lang="css" >
-
-  .journal{
-    padding-bottom: 3rem;
+  .textureBg{
     background-repeat: repeat;
     background-image: url("https://www.transparenttextures.com/patterns/dark-circles.png");
-}
-  .journal-textarea{
-    width: 100% ;
-    border: 0 none white;
-    color: white;
-    padding-inline: 1.2rem;
-    outline: none;
-    resize: none;
   }
-  .journal-textarea:focus-visible {
-    outline: none;
-}
-  .musts-input{
-    width: 100% ;
-    border: 0 none white;
-    color: white;
-    outline: none;
+  .lightTexture{
+    background-repeat: repeat;
+    background-image: url("https://www.transparenttextures.com/patterns/dark-denim.png");
   }
-  .journal-textarea::placeholder {
-    color: rgb(209, 209, 209);
+  .botomInsetShadow{
+    box-shadow: inset 0px -37px 20px -10px #1a1a1a;
   }
-  .moveUpwardsAddShadow{
-    transform: translate(0, -3rem);
-    box-shadow: 10px -5px 30px 30px #121212;
-    background-color:#121212;
-  }
+
 </style>

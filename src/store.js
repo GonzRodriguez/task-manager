@@ -11,7 +11,6 @@ export const store = new Vuex.Store({
     user: supabase.auth.user(),
     alert: {message: "", type: "info", color: "blue", isActive: false},
     loading: false,
-    drawer: false,
     tasks: [],
     notes: [],
     notebooks: [],
@@ -19,7 +18,6 @@ export const store = new Vuex.Store({
   mutations: {
     setUser(state){
       state.user = supabase.auth.user()
-      state.drawer = !!state.user
     },
     setTasks(state, data){
       const [...tasks] = data
