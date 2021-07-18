@@ -22,7 +22,6 @@
     </v-row>
     <v-sheet
       elevation="24"
-      outlined
       dark
     >
       <TasksCard :inputs="inputs" @add-task="addTask" @update-task="updateTask" @delete-task="deleteTask"></TasksCard>

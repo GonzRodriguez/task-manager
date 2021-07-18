@@ -23,16 +23,15 @@
       </v-btn>
   </div>
   <v-container v-else-if="!query">
-    <v-row v-for="(notebook, index) in notebooks" :key="index" no-gutters class="ma-1">
-      <!-- <v-col cols="12" class="d-flex flex-row"> -->
+    <v-row v-for="(notebook, index) in notebooks" :key="index" class="ma-1">
         <v-col
         cols="2"
         >
           <v-sheet
             class="pa-2"
-            color="grey darken-2"
+            color="blue-grey darken-4"
             elevation="1"
-            min-height="100"
+            min-height="40"
             min-width="100"
             outlined
             rounded
@@ -49,18 +48,23 @@
                       elevation="1"
                       outlined
                       >
-                    <v-list-item dense link>
-                      <v-col class="d-flex flex-row">
-                        <v-col cols="3">
+                    <v-list-item 
+                    dense
+                    link 
+                    @click="navigateTo(note.id)"
+                    >
+                    
+                      <v-col class="d-flex flex-row pa-0 ma-0" >
+                        <v-col cols="2" class="pa-0 ma-0">
                         <div class="text-truncate"> {{note.title}} </div>
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="4" class="pa-0 ma-0">
                         <v-list-item-subtitle class="text-truncate"> {{note.journal}} </v-list-item-subtitle>
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="3" class="pa-0 ma-0">
                         <v-list-item-subtitle class="text-truncate"> {{note.qa}} </v-list-item-subtitle>
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="3" class="pa-0 ma-0">
                         <v-list-item-subtitle class="text-truncate"> {{handleNoteTimestamp(note.inserted_at)}} </v-list-item-subtitle>
                         </v-col>
                       </v-col>
@@ -74,16 +78,17 @@
     </v-row>
   </v-container>
   <v-container v-else>
-    <v-row no-gutters>
+    <v-row >
         <v-col
         cols="2"
         >
           <v-sheet
             class="pa-2"
-            color="grey darken-2"
+            color="blue-grey darken-4"
             elevation="1"
-            min-height="100"
+            min-height="40"
             min-width="100"
+            rounded
             outlined
             >
             {{notebook.toUpperCase()}}
@@ -94,23 +99,28 @@
             <v-col cols="12">
               <v-list >
                   <v-sheet
-                      :color="i % 2 == 0 ? 'grey darken-4' : 'grey darken-3'"
-                      elevation="1"
-                      outlined
-                      >
-                    <v-list-item dense link>
-                      <v-col class="d-flex flex-row">
-                        <v-col cols="3">
+                    :color="i % 2 == 0 ? 'grey darken-4' : 'grey darken-3'"
+                    elevation="1"
+                    outlined
+                    >
+                    <v-list-item 
+                    class="pa-0 ma-0"
+                    dense
+                    link
+                    @click="navigateTo(note.id)"
+                    >
+                      <v-col class="d-flex flex-row pa-0 ma-0" >
+                        <v-col cols="2" class="pa-2 ma-0">
                         <div class="text-truncate"> {{note.title}} </div>
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="4" class="pa-0 ma-0">
                         <v-list-item-subtitle class="text-truncate"> {{note.journal}} </v-list-item-subtitle>
                         </v-col>
-                        <v-col cols="3">
-                        <v-list-item-subtitle ist-item-subtitleclass="text-truncate"> {{note.qa}} </v-list-item-subtitle>
+                        <v-col cols="3" class="pa-0 ma-0">
+                        <v-list-item-subtitle class="text-truncate"> {{note.qa}} </v-list-item-subtitle>
                         </v-col>
-                        <v-col cols="3">
-                        <v-list-item-subtitle class="text-truncate"> {{note.inserted_at}} </v-list-item-subtitle>
+                        <v-col cols="3" class="pa-0 ma-0">
+                        <v-list-item-subtitle class="text-truncate"> {{handleNoteTimestamp(note.inserted_at)}} </v-list-item-subtitle>
                         </v-col>
                       </v-col>
                     </v-list-item>
@@ -158,7 +168,10 @@ export default {
   methods: {
     handleNoteTimestamp(time){
       return moment(time).format("L")
-    }
+    },
+    navigateTo(id){
+      this.$router.push({path: `/notes/${id}`})
+    },
   }
 }
 </script>
