@@ -20,7 +20,7 @@ export default {
     isSignUp: ""
   }),
   created(){
-    this.$route.query.component === "signup" ? this.isSignUp = true : this.isSignUp = false
+    this.$route.query.c === "signup" ? this.isSignUp = true : this.isSignUp = false
   },
   updated(){
     this.$store.getters.isAuthenticated && this.$router.push({name: "home"})

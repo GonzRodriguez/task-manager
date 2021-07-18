@@ -32,6 +32,7 @@
             label="Add a title"
             solo
             clearable
+            @keyup.enter="addNewNotebook"
           >
           <template v-slot:append>
           <v-btn 
@@ -111,13 +112,16 @@ export default {
   computed: {
     ...mapState(["notebooks", "user"]),
     },
-  created() {
-      this.notebooks.notebook ? this.items.push(this.notebooks.notebook) : this.items.push("Notes")
-      this.selectedNotebook = this.items[this.selectedNotebookIndex]
-    },
   watch:{
     selectedNotebookIndex(){
       this.selectedNotebook = this.items[this.selectedNotebookIndex]
+    },
+    notebooks(){
+      if(this.notebooks) {
+        const [...notebooks] = this.notebooks
+        return this.items = notebooks
+      } 
+      return this.items = this.items["Notes"]
     }
   },
 
@@ -127,6 +131,7 @@ export default {
     },
     addNewNotebook(){
       this.items.push(this.newNotebookInput.value)
+      this.selectedNotebookIndex = this.items.indexOf(this.newNotebookInput.value)
       this.newNotebookInput.active = false
     },
     createNewNote(){

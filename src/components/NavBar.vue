@@ -4,8 +4,6 @@
     v-model="drawer" 
     app 
     clipped
-    overlay-color="grey darken-4"
-    mobile-breakpoint="md"
     >
       <NewNoteDialog :dialog="dialog" @handle-note-dialog="handleNewNoteDialog"></NewNoteDialog>
       <!-- TODO basicly all the views for every route -->

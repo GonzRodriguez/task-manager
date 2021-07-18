@@ -44,10 +44,10 @@ export default {
     },
 
   updated(){
-    this.user?.id && this.$store.dispatch("getTasks", this.user?.id)
-    this.user?.id && this.$store.dispatch("getNotes", this.user?.id)
-    this.user?.id && this.$store.dispatch("getNotebooks", this.user?.id)
-    this.$store.commit("setUser" )
+    this.$store.commit("setUser")
+    this.isAuthenticated && this.$store.dispatch("getTasks", this.user.id)
+    this.isAuthenticated && this.$store.dispatch("getNotes", this.user.id)
+    this.isAuthenticated && this.$store.dispatch("getNotebooks", this.user.id)
     
   },
     mounted(){

@@ -25,7 +25,12 @@ export const store = new Vuex.Store({
     },
     setNotebooks(state, data){  
       const [...notebooks] = data
-      state.notebooks = notebooks
+    const filterNotebooks = [];
+    notebooks.forEach(note => {
+      filterNotebooks.push(note.notebook)
+      state.notebooks = new Set(filterNotebooks)
+    })
+    
     },
     setNotes(state, data){
       const [...notes] = data

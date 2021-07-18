@@ -38,7 +38,7 @@
               Login
               </v-btn>
               <v-card-text class="text-body-2">
-              Don't have an account? <router-link :to="{name: 'auth', query: {component: 'signup'}}">Sing up</router-link>
+              Don't have an account? <router-link :to="{name: 'auth', query: {c: 'signup'}}">Sing up</router-link>
               </v-card-text>
             <!-- </div> -->
           </v-col>

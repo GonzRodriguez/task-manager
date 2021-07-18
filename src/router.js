@@ -46,8 +46,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.name !== "auth" && from.name !== "auth" && !store.getters.isAuthenticated) next({ name: "auth", query: {component: "login"}  })
+    if (to.name !== "auth" && from.name !== "auth" && !store.getters.isAuthenticated) next({ name: "auth", query: {c: "login"}  })
     else next()
 })
-
 export default router

@@ -1,9 +1,16 @@
 <template>
   <div id="note">
     <v-container fluid >
-    <div class="d-flex justyfy-end mx-2">
-      <div class="text-caption text--disabled">{{saving}}</div>
-    </div>
+      <v-row justify="space-between">
+        <v-col sm="2">
+          <div class="text-caption text--disabled">{{saving}}</div>
+        </v-col>
+        <v-col sm="3" class="d-flex justify-end">
+          <div class="text-caption text--disabled"><router-link :to="{name: 'notebooks', query: {notebook: notebook}}">{{notebook}}</router-link></div>
+          <div>&nbsp;·&nbsp;</div>
+          <div class="text-caption text--disabled">{{title}}</div>
+        </v-col>
+      </v-row>
     <v-container fluid class="textureBg grey darken-4 rounded">
     <v-row >
       <v-col >
@@ -64,6 +71,9 @@ export default {
   components: { TasksCard },
   name: "notes",
   data: () => ({
+    note: "",
+    notebook: "",
+    title: "",
     value: {
       journal: "",
       qa: "",
@@ -83,8 +93,21 @@ export default {
     },
   created(){
     this.tasks.forEach(task => {
-      this.inputs[task.action].push(task)
+      if(task.note_id === this.$route.params.id) this.inputs[task.action].push(task)
     })
+  },
+  watch: {
+    notes(){
+    this.note = this.notes.filter(n => n.id === this.$route.params.id)
+    this.value = {
+      journal: this.note[0].journal || this.value.journal,
+      qa: this.note[0].qa || this.value.qa,
+      thoughts: this.note[0].thoughts || this.value.thoughts,
+    },
+    this.note[0].musts.length == 6 ? this.value.musts = this.note[0].musts : this.value.musts = Array(6),
+    this.notebook = this.note[0].notebook.toUpperCase(),
+    this.title = this.note[0].title
+    }
   },
   updated(){
     this.$store.dispatch("getTasks", this.user.id)

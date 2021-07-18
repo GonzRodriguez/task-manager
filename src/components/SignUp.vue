@@ -37,7 +37,7 @@
                 Sign Up
                 </v-btn>
                 <v-card-text class="text-body-2">
-                Do you have an account? <router-link :to="{name: 'auth', query: {component: 'login'}}">Login</router-link>
+                Do you have an account? <router-link :to="{name: 'auth', query: {c: 'login'}}">Login</router-link>
                 </v-card-text>
               </v-col>
             </v-row>
