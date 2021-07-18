@@ -38,8 +38,7 @@
           </v-card-text>
           <v-card-text>
             <div class="text--disabled">
-              Created at: {{new Date(note.inserted_at)}}
-              {{is24h(note)}}
+              Created: {{handleNoteTimestamp(note.inserted_at)}}
             </div>
           </v-card-text>
         </v-col>
@@ -53,6 +52,7 @@
 
 <script>
 import { mapState, } from 'vuex'
+import moment from "moment"
 
 export default {
   name: "Home",
@@ -67,6 +67,9 @@ export default {
     goToNote(note){
       console.log(note);
       this.$router.push(`/notes/${note.id}`)
+    },
+    handleNoteTimestamp(time){
+      return moment(time).fromNow()
     },
     is24h(note){
       const d = new Date(note.inserted_at);

@@ -105,7 +105,7 @@ export default {
       thoughts: this.note[0].thoughts || this.value.thoughts,
     },
     this.note[0].musts.length == 6 ? this.value.musts = this.note[0].musts : this.value.musts = Array(6),
-    this.notebook = this.note[0].notebook.toUpperCase(),
+    this.notebook = this.note[0].notebook,
     this.title = this.note[0].title
     }
   },

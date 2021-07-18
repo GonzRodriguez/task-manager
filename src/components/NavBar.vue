@@ -83,6 +83,9 @@ export default {
   },
 
   methods: {
+    navigateTo(route){
+      this.$router.push(route)
+    },
     toggleDarkMode(){
       this.darkModeIcon.color === "white" ? this.darkModeIcon.color = "grey" : this.darkModeIcon.color = "white";
       this.$emit("change-dark-mode")

@@ -29,9 +29,9 @@ export default {
   name: "App",
   data: () => ({
     routes: [
-      { path: "tasks", title: "Tasks", icon: "mdi-view-dashboard" },
-      { path: "notebooks", title: "Notebooks", icon: "mdi-notebook-edit-outline" },
-      { path: "notes", title: "Notes", icon: "mdi-note-multiple-outline" },
+      { path: "/tasks", title: "Tasks", icon: "mdi-view-dashboard" },
+      { path: "/notebooks", title: "Notebooks", icon: "mdi-notebook-edit-outline" },
+      { path: "/notes", title: "Notes", icon: "mdi-note-multiple-outline" },
 
     ],
     darkMode: true,
