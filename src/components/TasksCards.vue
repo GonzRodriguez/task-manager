@@ -16,17 +16,19 @@
             <ul>
               <v-card-text>
                 <li v-for="(input, index) in inputs[tab.list]" :key="index">
-                  <div class="d-flex d-column">
+                  <v-row class="d-flex d-column" >
                     <v-textarea 
-                    class="text-caption text-md-body-1"
+                    class="text-caption text-md-body-1 pa-0 ma-0"
                     type="text" 
                     v-model="input.value"
                     rows="1"
+                    hide-details
                     solo
                     auto-grow
                     dense
                     flat
                     color="grey darken-1"
+                    autofocus
                     @keyup="$emit('update-task', {list: tab.list, value: input.value, id: input.id, urgency: tab.urgency})"
                     @keyup.enter="$emit('add-task', {list: tab.list, urgency: tab.urgency})"
                     />
@@ -35,11 +37,11 @@
                     icon 
                     @click="$emit('delete-task', {value: input.value, list: tab.list, urgency: tab.urgency})"
                     ><v-icon dark small>mdi-close</v-icon></v-btn>
-                  </div>
+                  </v-row>
                   </li>
               </v-card-text>
             </ul>
-            <v-btn block @click="$emit('add-task', {list:tab.list, urgency: tab.urgency})"><v-icon small dark> mdi-plus-thick </v-icon> </v-btn>         
+            <v-btn block @click="$emit('add-task', {list: tab.list, urgency: tab.urgency})"><v-icon small dark> mdi-plus-thick </v-icon> </v-btn>         
         </v-card>
       </v-col>
     </v-row>

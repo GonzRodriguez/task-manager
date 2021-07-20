@@ -2,7 +2,7 @@
   <v-app id="app">
     <NavBar :isAuthenticated="isAuthenticated" :routes="routes" :darkMode="darkMode" @change-dark-mode="handleDarkMode"></NavBar>
     <v-main>
-      <v-alert :color="alert.color" :type="alert.type" v-if="alert.isActive" width="60%" id="alert">{{alert.message}}</v-alert>
+      <v-alert :color="alert.color" :type="alert.type" v-if="alert.isActive" dismissible width="60%" id="alert">{{alert.message}}</v-alert>
       <v-container class="fill-height" v-if="!loading" >
         <v-row align="center" justify="center" class="fill-height" no-gutters> 
           <v-col >
@@ -20,7 +20,7 @@
 
 <script>
 import NavBar from './components/NavBar.vue'
-import { supabase } from './supabase'
+// import { supabase } from './supabase'
 import {mapState} from 'vuex'
 
 export default {
@@ -44,18 +44,21 @@ export default {
     },
 
   updated(){
-    this.$store.commit("setUser")
-    this.isAuthenticated && this.$store.dispatch("getTasks", this.user.id)
-    this.isAuthenticated && this.$store.dispatch("getNotes", this.user.id)
-    this.isAuthenticated && this.$store.dispatch("getNotebooks", this.user.id)
+    // this.$store.commit("setUser")
+    this.isAuthenticated && this.$store.dispatch("getTasks", this.user?.id)
+    this.isAuthenticated && this.$store.dispatch("getNotes", this.user?.id)
+    this.isAuthenticated && this.$store.dispatch("getNotebooks", this.user?.id)
     
   },
     mounted(){
-    this.$store.commit("setUser", supabase.auth.user())
+    this.$store.commit("setUser")
     },
   watch: {
     darkMode(newVal){
     this.$vuetify.theme.dark = newVal;
+  },
+  user(){
+    // this.$store.getters.StateUser
   }
   },
   methods: {

@@ -50,7 +50,7 @@
             <v-card-text>
             <ul>
               <div v-for="(must, index) in value.musts" :key="index">
-                <li> <v-text-field type="text" max-height="15px" v-model="value.musts[index]" hide-details solo flat dense class="text-caption text-md-body-1" background-color="transparent" color="grey" @keyup="autoUpload({musts: value.musts})"/></li>
+                <li> <v-text-field type="text" max-height="15px" v-model="value.musts[index]" hide-details solo flat dense class="text-caption text-md-body-1 " background-color="transparent" color="grey" @keyup="autoUpload({musts: value.musts})"/></li>
               </div>
             </ul>
             </v-card-text>
@@ -137,7 +137,7 @@ export default {
     updateTask(params){
       const {list, id, value} = params
       this.saving = "Saving..."
-      let timer;
+      var timer;
       const waitTime = 3000;
       clearTimeout(timer);
       timer = setTimeout(async () => {

@@ -36,6 +36,18 @@
                 >
                 Sign Up
                 </v-btn>
+                <v-btn 
+                class="my-3"
+                rounded
+                x-large
+                block
+                elevation="8"
+                justify="center"
+                @click="signUpWhitGithub"
+                >
+                Sign Up with GitHub
+                <v-icon>mdi-github</v-icon>
+                </v-btn>
                 <v-card-text class="text-body-2">
                 Do you have an account? <router-link :to="{name: 'auth', query: {c: 'login'}}">Login</router-link>
                 </v-card-text>
@@ -63,6 +75,9 @@ export default {
     signUp(credentials){
     this.$store.dispatch("signUp", credentials)
     this.$router.push({name: "home"})
+    },
+    signUpWhitGithub(){
+      this.$store.dispatch("signUpWhitGithub")
     }
   }
 }

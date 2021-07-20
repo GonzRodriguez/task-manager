@@ -46,7 +46,20 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.name !== "auth" && from.name !== "auth" && !store.getters.isAuthenticated) next({ name: "auth", query: {c: "login"}  })
+  // const storage = JSON.parse(localStorage.getItem("supabase.auth.token"))
+  // if (storage?.user?.aud === "authenticated"){
+  //   store.commit("setUser")
+  // }
+  if (to.name !== "auth" && from.name !== "auth" && !store.getters.isAuthenticated) next({ name: "auth", query: {c: "login"}  })
+    if (to.hash.length) {
+      next(false)
+      setTimeout(()=>{
+        next({name: "home"})
+        store.commit("setUser")
+        store.commit("loading", false)
+      }, 500)
+    }
     else next()
-})
+  })
+
 export default router

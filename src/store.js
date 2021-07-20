@@ -47,8 +47,8 @@ export const store = new Vuex.Store({
         state.alert.isActive = false
       }, 3200)
     },
-    loading(state){
-      state.loading = !state.loading
+    loading(state, data){
+      state.loading = data
     }
   },
   getters: {
@@ -57,13 +57,13 @@ export const store = new Vuex.Store({
   },
   actions: {
     async getTasks(context, id){
-      let { data, error } = await supabase
+      if (id){let { data, error } = await supabase
         .from('tasks')
         .select("*")
         .eq("user_id", id)
       error && console.log(error);
       error && context.commit("setAlert", {message: error.message, color: "red", type: "error" })
-      data && context.commit("setTasks", data)
+      data && context.commit("setTasks", data)}
     },
     async getNotes(context, id) {
       let { data, error } = await supabase
@@ -94,6 +94,17 @@ export const store = new Vuex.Store({
       data && context.commit("setAlert", {message: `New note ${data.title || ""} has been created`, color: "green", type: "success"})
 
       console.log(data,error);
+    },
+      async signUpWhitGithub(context) {
+        context.commit("loading", true)
+        const { user, error } = await supabase.auth.signIn({
+          provider: "github"
+        })
+        console.log(user);
+        if (error) context.commit("setAlert", { message: error.message, type: "error", color: "red" })
+        if (user){
+          context.commit("setUser", user)
+        }
     },
     async signUp(context, credentials) {
       const { user, error } = await supabase.auth.signUp({

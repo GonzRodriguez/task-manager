@@ -20,16 +20,20 @@ export default {
     isSignUp: ""
   }),
   created(){
-    this.$route.query.c === "signup" ? this.isSignUp = true : this.isSignUp = false
   },
   updated(){
     this.$store.getters.isAuthenticated && this.$router.push({name: "home"})
+  },
+  computed: {
+  },
+  watch: {
   },
   methods: {
     signUp(credentials){
     this.$store.dispatch("signUp", credentials)
     this.$router.push({name: "home"})
-    }
+    },
+
   }
 }
 </script>

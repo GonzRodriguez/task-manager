@@ -24,29 +24,23 @@
   </div>
   <v-container v-else-if="!query">
     <v-row v-for="(notebook, index) in notebooks" :key="index" class="ma-1">
-        <v-col
-        cols="2"
-        >
+
+        <v-col cols="12">
           <v-sheet
             class="pa-2"
             color="blue-grey darken-4"
             elevation="1"
             min-height="40"
             min-width="100"
-            outlined
-            rounded
             >
             {{notebook.toUpperCase()}}
           </v-sheet>
-        </v-col>
-        <v-col cols="10">
           <v-row v-for="(note, i) in notes" :key="i" no-gutters > 
             <v-col cols="12" v-if="note.notebook === notebook">
               <v-list >
                   <v-sheet
                       :color="i % 2 == 0 ? 'grey darken-4' : 'grey darken-3'"
                       elevation="1"
-                      outlined
                       >
                     <v-list-item 
                     dense
@@ -80,7 +74,7 @@
   <v-container v-else>
     <v-row >
         <v-col
-        cols="2"
+        cols="12"
         >
           <v-sheet
             class="pa-2"
@@ -94,7 +88,7 @@
             {{notebook.toUpperCase()}}
           </v-sheet>
         </v-col>
-        <v-col cols="10">
+        <v-col cols="12">
           <v-row v-for="(note, i) in notes" :key="i" no-gutters > 
             <v-col cols="12">
               <v-list >

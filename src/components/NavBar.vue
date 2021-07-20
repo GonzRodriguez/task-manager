@@ -78,7 +78,6 @@ export default {
   if (!this.user) this.drawer = false 
   },
   updated(){
-    this.$store.dispatch("getTasks", this.user?.id)
     if (!this.user) this.drawer = false 
   },
 
@@ -95,7 +94,7 @@ export default {
       this.drawer = false
       this.$store.commit("setUser")
       error && this.$store.dispatch("alert", error.message)
-      !error && this.$router.push(`/signin`);
+      !error && this.$router.push("auth?c=login");
     },
     handleNewNoteDialog(){
       this.dialog = !this.dialog;
