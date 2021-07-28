@@ -7,10 +7,15 @@
 <script>
 import SignUp from "../components/SignUp"
 import Login from "../components/Login.vue"
+import { mapState, } from 'vuex'
 
 export default {
   name: "auth",
   components: { SignUp, Login },
+    computed: {
+    ...mapState(["notes", "user"]),
+    isAuthenticated: function(){ return this.$store.getters.isAuthenticated},
+    },
 
   data: () => ({
     credentials:{
@@ -19,15 +24,6 @@ export default {
     },
     isSignUp: ""
   }),
-  created(){
-  },
-  updated(){
-    this.$store.getters.isAuthenticated && this.$router.push({name: "home"})
-  },
-  computed: {
-  },
-  watch: {
-  },
   methods: {
     signUp(credentials){
     this.$store.dispatch("signUp", credentials)

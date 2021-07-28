@@ -2,7 +2,7 @@
   <v-app id="app">
     <NavBar :isAuthenticated="isAuthenticated" :routes="routes" :darkMode="darkMode" @change-dark-mode="handleDarkMode"></NavBar>
     <v-main>
-      <v-alert :color="alert.color" :type="alert.type" v-if="alert.isActive" dismissible width="60%" id="alert">{{alert.message}}</v-alert>
+      <v-alert v-model="alert.isActive" :color="alert.color" :type="alert.type" dismissible width="60%" id="alert">{{alert.message}}</v-alert>
       <v-container class="fill-height" v-if="!loading" >
         <v-row align="center" justify="center" class="fill-height" no-gutters> 
           <v-col >
@@ -42,6 +42,8 @@ export default {
     StateUser : function(){ return this.$store.getters.StateUser},
     ...mapState([ "alert", "user", "loading", "drawer"])
     },
+    beforeCreate() {
+    },
 
   updated(){
     // this.$store.commit("setUser")
@@ -51,15 +53,16 @@ export default {
     
   },
     mounted(){
-    this.$store.commit("setUser")
+    this.$store.commit("setUser");
+
     },
   watch: {
+    'user.aud'() {
+      if(this.$route.path === "/auth" && this.user?.aud) this.$router.push({name: "home"})
+      },
     darkMode(newVal){
     this.$vuetify.theme.dark = newVal;
   },
-  user(){
-    // this.$store.getters.StateUser
-  }
   },
   methods: {
     navigateTo(route) {
@@ -87,6 +90,7 @@ export default {
 }
 *::-webkit-scrollbar {
   width: 12px;
+  height: 12px;
 }
 
 *::-webkit-scrollbar-track {

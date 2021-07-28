@@ -144,7 +144,6 @@ export default {
     if(this.$route.query.notebook){
       return this.query = true
     }
-    console.log(this.query);
     return this.query = false
   },
   watch: {
@@ -152,10 +151,6 @@ export default {
       if(this.query){
         this.filteredNotes = this.notes.filter((n) => n.notebook === this.$route.query.notebook)
         if (this.filteredNotes.length) this.notebook = this.$route.query.notebook
-        console.log(this.filteredNotes);
-        console.log(this.notebooks);
-        // const [...ntbs] = this.notebooks
-        // this.filteredNotebook = ntbs.filter(nb => nb === this.$route.query.notebook)
       }
     }
     },
@@ -164,7 +159,11 @@ export default {
       return moment(time).format("L")
     },
     navigateTo(id){
-      this.$router.push({path: `/notes/${id}`})
+      if (this.$route.path !== `/notes/${id}`) {
+        this.$router.push({path: `/notes/${id}`}).catch((error) => {
+          console.log(error)
+        });
+      }
     },
   }
 }

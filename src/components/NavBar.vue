@@ -94,16 +94,18 @@ export default {
       this.drawer = false
       this.$store.commit("setUser")
       error && this.$store.dispatch("alert", error.message)
-      !error && this.$router.push("auth?c=login");
+      !error && this.$router.push({name: "auth"});
     },
     handleNewNoteDialog(){
       this.dialog = !this.dialog;
       this.$store.dispatch("getNotebooks", this.user?.id)
     },
     goHome(){
-          this.$router.push({ name: "home" }).catch((error) => {
+      if (this.$route.name !== "home" && this.$route.path !== "/") {
+        this.$router.push('/').catch((error) => {
           console.log(error)
-      });
+        });
+      }
     },
 
 

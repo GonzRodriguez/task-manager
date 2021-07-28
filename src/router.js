@@ -9,9 +9,17 @@ const router = new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'home',
-      component: () => import('./views/Home.vue')
+      redirect: '/',
+      component: () => import('./views/Home.vue'),
+      beforeEnter: (to, from) => {
+        if(from.name === "auth" && store.state.loading && store.getters.isAuthenticated) store.commit("loading", false); 
+      }
+    },
+    {
+      path: '/',
+      component: () => import('./views/Home.vue'),
     },
     {
       path: '/tasks',
@@ -25,6 +33,7 @@ const router = new Router({
     },
     {
       path: '/notes/:id',
+      name: 'notes/:id',
       component: () => import('./views/Note.vue')
     },
     {
@@ -35,7 +44,8 @@ const router = new Router({
     {
       path: '/auth',
       name: 'auth',
-      component: () => import('./views/Auth.vue')
+      component: () => import('./views/Auth.vue'),
+
     },
     {
       path: '*',
@@ -46,18 +56,16 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  // const storage = JSON.parse(localStorage.getItem("supabase.auth.token"))
-  // if (storage?.user?.aud === "authenticated"){
-  //   store.commit("setUser")
-  // }
+  // store.commit("loading", false)
+
   if (to.name !== "auth" && from.name !== "auth" && !store.getters.isAuthenticated) next({ name: "auth", query: {c: "login"}  })
+
     if (to.hash.length) {
       next(false)
       setTimeout(()=>{
-        next({name: "home"})
         store.commit("setUser")
-        store.commit("loading", false)
-      }, 500)
+        next("/")
+      }, 2000)
     }
     else next()
   })
