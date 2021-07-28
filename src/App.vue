@@ -39,14 +39,13 @@ export default {
   }),
   computed: {
     isAuthenticated: function(){ return this.$store.getters.isAuthenticated},
-    StateUser : function(){ return this.$store.getters.StateUser},
+    StateUser: function(){ return this.$store.getters.StateUser},
     ...mapState([ "alert", "user", "loading", "drawer"])
     },
     beforeCreate() {
     },
 
   updated(){
-    // this.$store.commit("setUser")
     this.isAuthenticated && this.$store.dispatch("getTasks", this.user?.id)
     this.isAuthenticated && this.$store.dispatch("getNotes", this.user?.id)
     this.isAuthenticated && this.$store.dispatch("getNotebooks", this.user?.id)
@@ -57,20 +56,24 @@ export default {
 
     },
   watch: {
-    'user.aud'() {
-      if(this.$route.path === "/auth" && this.user?.aud) this.$router.push({name: "home"})
-      },
+    isAuthenticated(){
+      if(this.isAuthenticated && this.$route.name === 'auth' && this.loading){
+        console.log(this.isAuthenticated);
+        this.$store.commit("loading", false)
+        return this.$router.go('/')
+      }
+    },
     darkMode(newVal){
     this.$vuetify.theme.dark = newVal;
   },
   },
   methods: {
     navigateTo(route) {
-      if (this.$route.name !== route) {
-        this.$router.push({ name: route }).catch((error) => {
+      // if (this.$route.name !== route) {
+        this.$router.push({ path: route }).catch((error) => {
           console.log(error)
         });
-      }
+      // }
     },
     handleDarkMode(){
     // TODO

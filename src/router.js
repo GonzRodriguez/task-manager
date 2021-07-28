@@ -20,6 +20,9 @@ const router = new Router({
     {
       path: '/',
       component: () => import('./views/Home.vue'),
+      beforeEnter: (to, from) => {
+        if(from.name === "auth" && store.state.loading && store.getters.isAuthenticated) store.commit("loading", false); 
+      }
     },
     {
       path: '/tasks',

@@ -83,7 +83,11 @@ export default {
 
   methods: {
     navigateTo(route){
-      this.$router.push(route)
+        if (this.$route.path !== route) {
+        this.$router.push({ path: route }).catch((error) => {
+          console.log(error)
+        });
+      }
     },
     toggleDarkMode(){
       this.darkModeIcon.color === "white" ? this.darkModeIcon.color = "grey" : this.darkModeIcon.color = "white";
