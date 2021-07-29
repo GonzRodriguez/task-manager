@@ -24,7 +24,7 @@
       elevation="24"
       dark
     >
-      <TasksCard :inputs="inputs" @add-task="addTask" @update-task="updateTask" @delete-task="deleteTask"></TasksCard>
+      <TasksCard :inputs="inputs" @add-task="addTask" @save-task="saveTask" @delete-task="deleteTask" @complete-task="completeTask"></TasksCard>
         <v-row>
           <v-col cols="12"  md="6" sm="12" fluid>
           <v-card color="grey darken-4" class="lightTexture" flat>
@@ -134,7 +134,7 @@ export default {
       if (error) this.saving = "Something went wrong, your note isn't saved"
       this.inputs[list].push({value: "", id: data[0].id});
     },
-    updateTask(params){
+    saveTask(params){
       const {list, id, value} = params
       this.saving = "Saving..."
       var timer;
@@ -157,6 +157,14 @@ export default {
       .match({note_id: this.$route.params.id, value: value, urgency: urgency })
       console.log(error, data);
       this.inputs[list] = this.inputs[list].filter(t => t.value !== value)
+      return
+    },
+    async completeTask(arg){
+    const { data, error } = await supabase
+      .from('tasks')
+      .update()
+      .match({note_id: this.$route.params.id, completed: arg })
+      console.log(error, data);
       return
     }
   }

@@ -29,7 +29,7 @@
                     flat
                     color="grey darken-1"
                     autofocus
-                    @keyup="$emit('update-task', {list: tab.list, value: input.value, id: input.id, urgency: tab.urgency})"
+                    @keyup="$emit('save-task', {list: tab.list, value: input.value, id: input.id, urgency: tab.urgency})"
                     @keyup.enter="$emit('add-task', {list: tab.list, urgency: tab.urgency})"
                     />
                     <v-btn
