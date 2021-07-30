@@ -13,21 +13,21 @@
           link 
           @click="navigateTo(note.id)"
           >
-            <v-col class="d-flex flex-row pa-0 ma-0" >
-              <v-col cols="2" class="pa-0 ma-0">
+            <v-col class="d-flex flex-sm-row flex-column pa-0 ma-0" >
+              <v-col sm="2" class="pa-0 ma-0">
               <div class="text-truncate"> {{note.title}} </div>
               </v-col>
-              <v-col cols="1" class="pa-0 ma-0">
+              <v-col sm="1" class="pa-0 ma-0">
               <v-list-item-subtitle class="text-truncate"> in: {{note.notebook}} </v-list-item-subtitle>
               </v-col>
-              <v-col cols="6" class="pa-0 ma-0">
+              <v-col sm="6" class="pa-0 ma-0">
               <v-list-item-subtitle class="text-truncate"> {{note.journal}} </v-list-item-subtitle>
               </v-col>
-              <v-col cols="2" class="pa-0 ma-0">
+              <v-col sm="2" class="pa-0 ma-0">
               <v-list-item-subtitle class="text-truncate"> {{note.qa}} </v-list-item-subtitle>
               </v-col>
-              <v-col cols="1" class="pa-0 ma-0">
-              <v-list-item-subtitle class="text-truncate"> {{handleNoteTimestamp(note.inserted_at)}} </v-list-item-subtitle>
+              <v-col sm="1" class="pa-0 ma-0 text-left">
+              <v-list-item-subtitle class="text-truncate "> {{handleNoteTimestamp(note.inserted_at)}} </v-list-item-subtitle>
               </v-col>
             </v-col>
           </v-list-item>

@@ -18,6 +18,7 @@
       max-width="500"
       class="mx-auto"
       @click="createNotebook"
+      aria-label="create notebook"
       >
       CREATE NEW NOTEBOOK
       </v-btn>
@@ -48,17 +49,17 @@
                     @click="navigateTo(note.id)"
                     >
                     
-                      <v-col class="d-flex flex-row pa-0 ma-0" >
-                        <v-col cols="2" class="pa-0 ma-0">
+                      <v-col class="d-flex flex-sm-row flex-column pa-0 ma-0" >
+                        <v-col sm="2" class="pa-0 ma-0">
                         <div class="text-truncate"> {{note.title}} </div>
                         </v-col>
-                        <v-col cols="4" class="pa-0 ma-0">
+                        <v-col sm="4" class="pa-0 ma-0">
                         <v-list-item-subtitle class="text-truncate"> {{note.journal}} </v-list-item-subtitle>
                         </v-col>
-                        <v-col cols="3" class="pa-0 ma-0">
+                        <v-col sm="3" class="pa-0 ma-0">
                         <v-list-item-subtitle class="text-truncate"> {{note.qa}} </v-list-item-subtitle>
                         </v-col>
-                        <v-col cols="3" class="pa-0 ma-0">
+                        <v-col sm="3" class="pa-0 ma-0">
                         <v-list-item-subtitle class="text-truncate"> {{handleNoteTimestamp(note.inserted_at)}} </v-list-item-subtitle>
                         </v-col>
                       </v-col>
@@ -103,17 +104,17 @@
                     link
                     @click="navigateTo(note.id)"
                     >
-                      <v-col class="d-flex flex-row pa-0 ma-0" >
-                        <v-col cols="2" class="pa-2 ma-0">
+                      <v-col class="d-flex flex-sm-row flex-column pa-0 ma-0" >
+                        <v-col sm="2" class="pa-2 ma-0">
                         <div class="text-truncate"> {{note.title}} </div>
                         </v-col>
-                        <v-col cols="4" class="pa-0 ma-0">
+                        <v-col sm="4" class="pa-0 ma-0">
                         <v-list-item-subtitle class="text-truncate"> {{note.journal}} </v-list-item-subtitle>
                         </v-col>
-                        <v-col cols="3" class="pa-0 ma-0">
+                        <v-col sm="3" class="pa-0 ma-0">
                         <v-list-item-subtitle class="text-truncate"> {{note.qa}} </v-list-item-subtitle>
                         </v-col>
-                        <v-col cols="3" class="pa-0 ma-0">
+                        <v-col sm="3" class="pa-0 ma-0">
                         <v-list-item-subtitle class="text-truncate"> {{handleNoteTimestamp(note.inserted_at)}} </v-list-item-subtitle>
                         </v-col>
                       </v-col>

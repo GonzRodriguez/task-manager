@@ -33,6 +33,7 @@
                 elevation="8"
                 justify="center"
                 @click="signUp(credentials)"
+                aria-label="sign up"
                 >
                 Sign Up
                 </v-btn>
@@ -44,6 +45,7 @@
                 elevation="8"
                 justify="center"
                 @click="signUpWhitGithub"
+                aria-label="sign up with github"
                 >
                 Sign Up with GitHub
                 <v-icon>mdi-github</v-icon>

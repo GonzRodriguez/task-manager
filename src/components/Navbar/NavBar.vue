@@ -23,8 +23,9 @@
         rounded
         elevation="10"        
         block
-        color="teal accent-3"
+        color="teal accent-4"
         @click="handleNewNoteDialog"
+        aria-label="new note"
         >
         New Note</v-btn>
         </div>
@@ -40,6 +41,7 @@
           text
           block
           @click="logout"
+          aria-label="log out"
           >
           Logout
           </v-btn>

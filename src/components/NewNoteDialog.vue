@@ -38,6 +38,8 @@
           <v-btn 
             elevation="8"
             @click="addNewNotebook"
+            aria-label="add new notebook"
+
             >
             Create
           </v-btn>
@@ -48,6 +50,7 @@
             small
             elevation="8"
             @click="handleNewNotebookInput"
+            aria-label="create"
             >
             <v-icon small dark>
               mdi-plus
@@ -69,6 +72,7 @@
           color="teal"
           elevation="8"
           @click="createNewNote"
+          aria-label="create new note"
           >
           CREATE NEW NOTE
           </v-btn>
@@ -79,6 +83,7 @@
           elevation="10"        
           block
           @click="$emit('handle-note-dialog')"
+          aria-label="dismiss"
         >
         DISMISS</v-btn>
         </div>

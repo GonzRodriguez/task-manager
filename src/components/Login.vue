@@ -30,10 +30,11 @@
               x-large
               block
               secondary
-              color="teal "
+              color="teal"
               elevation="8"
               justify="center"
               @click="logIn(credentials)"
+              aria-label="login"
               >
               Login
               </v-btn>
@@ -45,6 +46,8 @@
                 elevation="8"
                 justify="center"
                 @click="signUpWhitGithub"
+                aria-label="sign up with github"
+
                 >
                 Sign Up with GitHub
                 <v-icon>mdi-github</v-icon>

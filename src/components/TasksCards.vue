@@ -36,12 +36,13 @@
                     id="closeButton"
                     icon 
                     @click="$emit('delete-task', {value: input.value, list: tab.list, urgency: tab.urgency})"
+                    aria-label="delete"
                     ><v-icon dark small>mdi-close</v-icon></v-btn>
                   </v-row>
                   </li>
               </v-card-text>
             </ul>
-            <v-btn block @click="$emit('add-task', {list: tab.list, urgency: tab.urgency})"><v-icon small dark> mdi-plus-thick </v-icon> </v-btn>         
+            <v-btn block @click="$emit('add-task', {list: tab.list, urgency: tab.urgency})" aria-label="add task"><v-icon small dark> mdi-plus-thick </v-icon> </v-btn>         
         </v-card>
       </v-col>
     </v-row>

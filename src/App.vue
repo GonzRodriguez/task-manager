@@ -60,7 +60,7 @@ export default {
       if(this.isAuthenticated && this.$route.name === 'auth' && this.loading){
         console.log(this.isAuthenticated);
         this.$store.commit("loading", false)
-        return this.$router.go('/')
+        return this.$router.go('/home')
       }
     },
     darkMode(newVal){
