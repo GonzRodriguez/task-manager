@@ -24,6 +24,12 @@ export default {
     },
     isSignUp: ""
   }),
+  watch: {
+    isAuthenticated(){
+      console.log(this.isAuthenticated);
+      this.isAuthenticated && window.location.reload()
+    }
+  },
   methods: {
     signUp(credentials){
     this.$store.dispatch("signUp", credentials)

@@ -79,7 +79,7 @@ export default {
   methods: {
     logIn(credentials){
     this.$store.dispatch("logIn", credentials)
-    this.$router.push({name: "home"})
+    this.$router.push({path: "/"})
     },
     signUpWhitGithub(){
       this.$store.dispatch("signUpWhitGithub")

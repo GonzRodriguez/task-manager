@@ -53,7 +53,10 @@ const router = new Router({
     {
       path: '*',
       name: '404',
-      component: () => import('./views/404.vue')
+      component: () => import('./views/404.vue'),
+      beforeEnter: (to, from, next) => {
+        if (window.location.pathname === "/auth" && store.getters.isAuthenticated) next({ name: "/" })
+      }
     }
   ]
 })
@@ -61,16 +64,9 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   // store.commit("loading", false)
 
+  console.log(window.location);
   if (to.name !== "auth" && from.name !== "auth" && !store.getters.isAuthenticated) next({ name: "auth", query: {c: "login"}  })
-
-    if (to.hash.length) {
-      next(false)
-      setTimeout(()=>{
-        store.commit("setUser")
-        next("/")
-      }, 2000)
-    }
-    else next()
+  else next()
   })
 
 export default router

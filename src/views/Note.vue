@@ -15,8 +15,7 @@
     <v-row >
       <v-col >
         <v-card color="transparent" flat>
-          <v-card-subtitle class="text-md-h6 mb-0 pb-0">Journal</v-card-subtitle>
-          <v-textarea solo flat class="text-caption text-md-body-1" background-color="transparent" auto-grow color="grey" name="Text1" cols="40" rows="8" v-model="value.journal" @keyup="autoUpload({journal: value.journal})"></v-textarea>
+          <v-textarea solo flat class="text-caption text-md-body-1 journalFont" placeholder="Journal" background-color="transparent" auto-grow color="grey" name="Text1" cols="40" rows="8" v-model="value.journal" @keyup="autoUpload({journal: value.journal})"></v-textarea>
         </v-card>
       </v-col>
     </v-row>
@@ -85,7 +84,8 @@ export default {
         important: [],
         delegate: [],
         delete: []
-      }
+      },
+    timer: ""
   }),
     computed: {
     ...mapState(["notes", "user", "tasks"]),
@@ -114,10 +114,9 @@ export default {
   methods: {
      autoUpload(toUpdate){
       this.saving = "Saving..."
-      let timer;
       const waitTime = 3000;
-      clearTimeout(timer);
-      timer = setTimeout(async () => {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(async () => {
         let { data, error } = await supabase
           .from('notes')
           .update(toUpdate)
@@ -182,6 +181,9 @@ export default {
   }
   .botomInsetShadow{
     box-shadow: inset 0px -37px 20px -10px #1a1a1a;
+  }
+  textarea{
+    font-family: 'Bree Serif', serif;
   }
 
 </style>
